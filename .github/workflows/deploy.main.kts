@@ -29,7 +29,7 @@ workflow(
         uses(action = ActionsSetupGradle())
         run(command = "./gradlew wasmJsBrowserDistribution")
         uses(action = ConfigurePages())
-        uses(action = UploadPagesArtifact(path = "build/dist/wasmJs/productionExecutable"))
+        uses(action = UploadPagesArtifact(path = "build/dist/wasmJs/productionExecutable/"))
         uses(action = DeployPages())
     }
 }.writeToFile()

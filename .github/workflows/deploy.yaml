@@ -37,6 +37,6 @@ jobs:
     - id: 'step-4'
       uses: 'actions/upload-pages-artifact@v3'
       with:
-        path: 'build/dist/wasmJs/productionExecutable'
+        path: 'build/dist/wasmJs/productionExecutable/'
     - id: 'step-5'
       uses: 'actions/deploy-pages@v4'
