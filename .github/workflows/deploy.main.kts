@@ -14,6 +14,7 @@ import io.github.typesafegithub.workflows.actions.actions.ConfigurePages
 import io.github.typesafegithub.workflows.actions.actions.DeployPages
 import io.github.typesafegithub.workflows.actions.actions.UploadPagesArtifact
 import io.github.typesafegithub.workflows.actions.gradle.ActionsSetupGradle
+import io.github.typesafegithub.workflows.domain.Environment
 import io.github.typesafegithub.workflows.domain.RunnerType
 import io.github.typesafegithub.workflows.domain.triggers.Push
 import io.github.typesafegithub.workflows.dsl.workflow
@@ -24,12 +25,21 @@ workflow(
     on = listOf(Push(branches = listOf("main"))),
     sourceFile = __FILE__.toPath(),
 ) {
-    job(id = "deploy", runsOn = RunnerType.UbuntuLatest) {
+    job(
+        id = "deploy",
+        runsOn = RunnerType.UbuntuLatest,
+        environment = Environment(
+            name = "github-pages",
+            url = null,
+        )
+    ) {
         uses(action = Checkout())
         uses(action = ActionsSetupGradle())
         run(command = "./gradlew wasmJsBrowserDistribution")
         uses(action = ConfigurePages())
-        uses(action = UploadPagesArtifact(path = "build/dist/wasmJs/productionExecutable/"))
+        uses(action = UploadPagesArtifact(
+            path = "composeApp/build/dist/wasmJs/productionExecutable/"
+        ))
         uses(action = DeployPages())
     }
 }.writeToFile()
