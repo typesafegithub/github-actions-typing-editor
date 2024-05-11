@@ -15,6 +15,8 @@ import io.github.typesafegithub.workflows.actions.actions.DeployPages
 import io.github.typesafegithub.workflows.actions.actions.UploadPagesArtifact
 import io.github.typesafegithub.workflows.actions.gradle.ActionsSetupGradle
 import io.github.typesafegithub.workflows.domain.Environment
+import io.github.typesafegithub.workflows.domain.Mode
+import io.github.typesafegithub.workflows.domain.Permission
 import io.github.typesafegithub.workflows.domain.RunnerType
 import io.github.typesafegithub.workflows.domain.triggers.Push
 import io.github.typesafegithub.workflows.dsl.workflow
@@ -24,6 +26,11 @@ workflow(
     name = "Deploy",
     on = listOf(Push(branches = listOf("main"))),
     sourceFile = __FILE__.toPath(),
+    permissions = mapOf(
+        Permission.Contents to Mode.Read,
+        Permission.Pages to Mode.Write,
+        Permission.IdToken to Mode.Write,
+    ),
 ) {
     job(
         id = "deploy",
