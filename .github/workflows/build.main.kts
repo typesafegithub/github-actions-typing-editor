@@ -4,9 +4,11 @@
 
 @file:Repository("https://github-workflows-kt-bindings.colman.com.br/binding/")
 @file:DependsOn("actions:checkout:v4")
+@file:DependsOn("actions:setup-java:v4")
 @file:DependsOn("gradle:actions__setup-gradle:v3")
 
 import io.github.typesafegithub.workflows.actions.actions.Checkout
+import io.github.typesafegithub.workflows.actions.actions.SetupJava
 import io.github.typesafegithub.workflows.actions.gradle.ActionsSetupGradle
 import io.github.typesafegithub.workflows.domain.RunnerType
 import io.github.typesafegithub.workflows.domain.triggers.PullRequest
@@ -27,6 +29,10 @@ workflow(
         runsOn = RunnerType.UbuntuLatest,
     ) {
         uses(action = Checkout())
+        uses(action = SetupJava(
+            javaVersion = "21",
+            distribution = SetupJava.Distribution.Zulu,
+        ))
         uses(action = ActionsSetupGradle())
         run(command = "./gradlew build")
     }
