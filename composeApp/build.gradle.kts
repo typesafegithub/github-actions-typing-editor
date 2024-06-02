@@ -33,6 +33,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation("io.ktor:ktor-client-core:3.0.0-wasm2")
+            implementation("it.krzeminski:snakeyaml-engine-kmp:3.0.0")
         }
     }
 }
