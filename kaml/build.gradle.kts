@@ -23,6 +23,7 @@ import com.charleskorn.kaml.configureTesting
 import com.charleskorn.kaml.configureVersioning
 import com.charleskorn.kaml.configureWrapper
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -58,6 +59,13 @@ kotlin {
             }
         }
         binaries.executable()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        binaries.library()
+        browser()
+        nodejs()
     }
 
     sourceSets {
