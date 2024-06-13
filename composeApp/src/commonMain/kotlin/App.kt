@@ -38,12 +38,19 @@ fun App() {
                 onValueChange = { actionCoords = it },
             )
             Spacer(Modifier.height(10.dp))
-            Text("Manifest:")
-            Text(manifestYaml)
 
-            val manifest = Yaml.default.decodeFromString<Metadata>(manifestYaml)
+            val myYaml = Yaml(configuration = Yaml.default.configuration.copy(strictMode = false))
             Text("Parsed:")
-            Text(manifest.toString())
+            val parsedYaml = try {
+                val manifest = myYaml.decodeFromString<Metadata>(manifestYaml)
+                manifest.toString()
+            } catch (e: Exception) {
+                "Exception: ${e.toString()}"
+            }
+            Text(parsedYaml)
+
+            Text("Raw YAML:")
+            Text(manifestYaml)
         }
     }
 }
