@@ -9,9 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.charleskorn.kaml.Yaml
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 
 val client = HttpClient()
 
@@ -35,8 +38,40 @@ fun App() {
                 onValueChange = { actionCoords = it },
             )
             Spacer(Modifier.height(10.dp))
-            Text("Manifest:")
+
+            val myYaml = Yaml(configuration = Yaml.default.configuration.copy(strictMode = false))
+            Text("Parsed:")
+            val parsedYaml = try {
+                val manifest = myYaml.decodeFromString<Metadata>(manifestYaml)
+                manifest.toString()
+            } catch (e: Exception) {
+                "Exception: ${e.toString()}"
+            }
+            Text(parsedYaml)
+
+            Text("Raw YAML:")
             Text(manifestYaml)
         }
     }
 }
+
+@Serializable
+data class Metadata(
+    val name: String,
+    val description: String,
+    val inputs: Map<String, Input> = emptyMap(),
+    val outputs: Map<String, Output> = emptyMap(),
+)
+
+@Serializable
+data class Input(
+    val description: String = "",
+    val default: String? = null,
+    val required: Boolean? = null,
+    val deprecationMessage: String? = null,
+)
+
+@Serializable
+data class Output(
+    val description: String = "",
+)

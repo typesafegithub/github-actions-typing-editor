@@ -1,8 +1,8 @@
 [versions]
 compose = "1.6.6"
-compose-plugin = "1.6.2"
+compose-plugin = "1.6.11"
 junit = "4.13.2"
-kotlin = "1.9.23"
+kotlin = "2.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -13,4 +13,5 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

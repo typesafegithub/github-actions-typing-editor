@@ -23,12 +23,13 @@ import com.charleskorn.kaml.configureTesting
 import com.charleskorn.kaml.configureVersioning
 import com.charleskorn.kaml.configureWrapper
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    id("io.kotest.multiplatform") version "5.9.0"
+    id("io.kotest.multiplatform") version "5.9.1"
 }
 
 group = "com.charleskorn.kaml"
@@ -60,10 +61,17 @@ kotlin {
         binaries.executable()
     }
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        binaries.library()
+        browser()
+        nodejs()
+    }
+
     sourceSets {
         commonMain {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.0")
                 implementation("it.krzeminski:snakeyaml-engine-kmp:3.0.0")
                 implementation("com.squareup.okio:okio:3.9.0")
             }
@@ -71,16 +79,16 @@ kotlin {
 
         commonTest {
             dependencies {
-                implementation("io.kotest:kotest-assertions-core:5.9.0")
-                implementation("io.kotest:kotest-framework-api:5.9.0")
-                implementation("io.kotest:kotest-framework-engine:5.9.0")
-                implementation("io.kotest:kotest-framework-datatest:5.9.0")
+                implementation("io.kotest:kotest-assertions-core:5.9.1")
+                implementation("io.kotest:kotest-framework-api:5.9.1")
+                implementation("io.kotest:kotest-framework-engine:5.9.1")
+                implementation("io.kotest:kotest-framework-datatest:5.9.1")
             }
         }
 
         jvmTest {
             dependencies {
-                implementation("io.kotest:kotest-runner-junit5:5.9.0")
+                implementation("io.kotest:kotest-runner-junit5:5.9.1")
             }
         }
     }
