@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.jetbrainsCompose)
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 kotlin {
@@ -34,7 +35,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation("io.ktor:ktor-client-core:3.0.0-wasm2")
-            implementation("it.krzeminski:snakeyaml-engine-kmp:3.0.0")
+            implementation("com.charleskorn.kaml:kaml")
         }
     }
 }
