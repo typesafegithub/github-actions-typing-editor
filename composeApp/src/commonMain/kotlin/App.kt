@@ -2,6 +2,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -49,22 +51,24 @@ fun App() {
                 null
             }
 
-            Text("Inputs", fontWeight = FontWeight.Bold)
-            if (parsedYaml?.inputs?.isEmpty() == true) {
-                Text("<none>")
-            }
-            parsedYaml?.inputs?.forEach {
-                Text(it.key)
-            }
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                Text("Inputs", fontWeight = FontWeight.Bold)
+                if (parsedYaml?.inputs?.isEmpty() == true) {
+                    Text("<none>")
+                }
+                parsedYaml?.inputs?.forEach {
+                    Text(it.key)
+                }
 
-            Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(10.dp))
 
-            Text("Outputs", fontWeight = FontWeight.Bold)
-            if (parsedYaml?.outputs?.isEmpty() == true) {
-                Text("<none>")
-            }
-            parsedYaml?.outputs?.forEach {
-                Text(it.key)
+                Text("Outputs", fontWeight = FontWeight.Bold)
+                if (parsedYaml?.outputs?.isEmpty() == true) {
+                    Text("<none>")
+                }
+                parsedYaml?.outputs?.forEach {
+                    Text(it.key)
+                }
             }
         }
     }
