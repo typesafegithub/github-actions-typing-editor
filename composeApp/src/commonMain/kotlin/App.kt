@@ -8,6 +8,8 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.charleskorn.kaml.Yaml
 import io.ktor.client.HttpClient
@@ -40,17 +42,30 @@ fun App() {
             Spacer(Modifier.height(10.dp))
 
             val myYaml = Yaml(configuration = Yaml.default.configuration.copy(strictMode = false))
-            Text("Parsed:")
             val parsedYaml = try {
-                val manifest = myYaml.decodeFromString<Metadata>(manifestYaml)
-                manifest.toString()
+                myYaml.decodeFromString<Metadata>(manifestYaml)
             } catch (e: Exception) {
-                "Exception: ${e.toString()}"
+                println("Exception: $e")
+                null
             }
-            Text(parsedYaml)
 
-            Text("Raw YAML:")
-            Text(manifestYaml)
+            Text("Inputs", fontWeight = FontWeight.Bold)
+            if (parsedYaml?.inputs?.isEmpty() == true) {
+                Text("<none>")
+            }
+            parsedYaml?.inputs?.forEach {
+                Text(it.key)
+            }
+
+            Spacer(Modifier.height(10.dp))
+
+            Text("Outputs", fontWeight = FontWeight.Bold)
+            if (parsedYaml?.outputs?.isEmpty() == true) {
+                Text("<none>")
+            }
+            parsedYaml?.outputs?.forEach {
+                Text(it.key)
+            }
         }
     }
 }
