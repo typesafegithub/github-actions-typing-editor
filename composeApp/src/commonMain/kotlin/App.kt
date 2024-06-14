@@ -10,7 +10,6 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.charleskorn.kaml.Yaml
@@ -25,12 +24,11 @@ val client = HttpClient()
 @Composable
 fun App() {
     MaterialTheme {
-        var actionCoords by remember { mutableStateOf("actions/checkout") }
+        var actionCoords by remember { mutableStateOf("actions/checkout@v4") }
         var manifestYaml by remember { mutableStateOf("<manifest>") }
 
         LaunchedEffect(actionCoords) {
-            println("Changed to $actionCoords")
-            val actionManifestYaml = client.get(urlString = "https://raw.githubusercontent.com/$actionCoords/main/action.yml")
+            val actionManifestYaml = client.get(urlString = "https://raw.githubusercontent.com/${actionCoords.replace("@", "/")}/action.yml")
                 .body<String>()
             manifestYaml = actionManifestYaml
         }
