@@ -37,6 +37,13 @@ kotlin {
             implementation("io.ktor:ktor-client-core:3.0.0-wasm2")
             implementation("com.charleskorn.kaml:kaml")
         }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
     }
 }
 
