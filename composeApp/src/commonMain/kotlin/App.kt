@@ -1,4 +1,5 @@
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,10 +22,13 @@ fun App() {
     MaterialTheme {
         var actionCoords by remember { mutableStateOf("actions/checkout@v4") }
         var manifest: Metadata? by remember { mutableStateOf(null) }
+        var typingFromAction: Typing? by remember { mutableStateOf(null) }
+        var typingFromCatalog: Typing? by remember { mutableStateOf(null) }
 
         LaunchedEffect(actionCoords) {
-            val actionManifestYaml = fetchManifest(actionCoords)
-            manifest = actionManifestYaml
+            manifest = fetchManifest(actionCoords)
+            typingFromAction = fetchTypingFromAction(actionCoords)
+            typingFromCatalog = fetchTypingFromCatalog(actionCoords)
         }
 
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -35,26 +39,59 @@ fun App() {
             )
             Spacer(Modifier.height(10.dp))
 
-
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                Text("Inputs", fontWeight = FontWeight.Bold)
-                if (manifest?.inputs?.isEmpty() == true) {
-                    Text("<none>")
-                }
-                manifest?.inputs?.forEach {
-                    Text(it.key)
-                }
-
-                Spacer(Modifier.height(10.dp))
-
-                Text("Outputs", fontWeight = FontWeight.Bold)
-                if (manifest?.outputs?.isEmpty() == true) {
-                    Text("<none>")
-                }
-                manifest?.outputs?.forEach {
-                    Text(it.key)
-                }
+            Row {
+                manifest(manifest)
+                typing(typingFromAction, source = "action")
+                typing(typingFromCatalog, source = "catalog")
             }
+        }
+    }
+}
+
+@Composable
+private fun manifest(manifest: Metadata?) {
+    Column(Modifier.verticalScroll(rememberScrollState())) {
+        Text("Manifest:")
+        Text("Inputs", fontWeight = FontWeight.Bold)
+        if (manifest?.inputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        manifest?.inputs?.forEach {
+            Text(it.key)
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+        Text("Outputs", fontWeight = FontWeight.Bold)
+        if (manifest?.outputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        manifest?.outputs?.forEach {
+            Text(it.key)
+        }
+    }
+}
+
+@Composable
+private fun typing(typing: Typing?, source: String) {
+    Column(Modifier.verticalScroll(rememberScrollState())) {
+        Text("Typing from $source:")
+        Text("Inputs", fontWeight = FontWeight.Bold)
+        if (typing?.inputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        typing?.inputs?.forEach {
+            Text("${it.key}: ${it.value.type}")
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+        Text("Outputs", fontWeight = FontWeight.Bold)
+        if (typing?.outputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        typing?.outputs?.forEach {
+            Text("${it.key}: ${it.value.type}")
         }
     }
 }
