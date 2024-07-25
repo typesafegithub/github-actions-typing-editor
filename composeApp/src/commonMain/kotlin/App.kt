@@ -12,12 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.charleskorn.kaml.Yaml
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 
 val client = HttpClient()
 
@@ -25,12 +20,11 @@ val client = HttpClient()
 fun App() {
     MaterialTheme {
         var actionCoords by remember { mutableStateOf("actions/checkout@v4") }
-        var manifestYaml by remember { mutableStateOf("<manifest>") }
+        var manifest: Metadata? by remember { mutableStateOf(null) }
 
         LaunchedEffect(actionCoords) {
-            val actionManifestYaml = client.get(urlString = "https://raw.githubusercontent.com/${actionCoords.replace("@", "/")}/action.yml")
-                .body<String>()
-            manifestYaml = actionManifestYaml
+            val actionManifestYaml = fetchManifest(actionCoords)
+            manifest = actionManifestYaml
         }
 
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -41,54 +35,26 @@ fun App() {
             )
             Spacer(Modifier.height(10.dp))
 
-            val myYaml = Yaml(configuration = Yaml.default.configuration.copy(strictMode = false))
-            val parsedYaml = try {
-                myYaml.decodeFromString<Metadata>(manifestYaml)
-            } catch (e: Exception) {
-                println("Exception: $e")
-                null
-            }
 
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text("Inputs", fontWeight = FontWeight.Bold)
-                if (parsedYaml?.inputs?.isEmpty() == true) {
+                if (manifest?.inputs?.isEmpty() == true) {
                     Text("<none>")
                 }
-                parsedYaml?.inputs?.forEach {
+                manifest?.inputs?.forEach {
                     Text(it.key)
                 }
 
                 Spacer(Modifier.height(10.dp))
 
                 Text("Outputs", fontWeight = FontWeight.Bold)
-                if (parsedYaml?.outputs?.isEmpty() == true) {
+                if (manifest?.outputs?.isEmpty() == true) {
                     Text("<none>")
                 }
-                parsedYaml?.outputs?.forEach {
+                manifest?.outputs?.forEach {
                     Text(it.key)
                 }
             }
         }
     }
 }
-
-@Serializable
-data class Metadata(
-    val name: String,
-    val description: String,
-    val inputs: Map<String, Input> = emptyMap(),
-    val outputs: Map<String, Output> = emptyMap(),
-)
-
-@Serializable
-data class Input(
-    val description: String = "",
-    val default: String? = null,
-    val required: Boolean? = null,
-    val deprecationMessage: String? = null,
-)
-
-@Serializable
-data class Output(
-    val description: String = "",
-)
