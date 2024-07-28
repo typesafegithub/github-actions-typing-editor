@@ -35,7 +35,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation("io.ktor:ktor-client-core:3.0.0-wasm2")
-            implementation("com.charleskorn.kaml:kaml")
+            implementation("com.charleskorn.kaml:kaml:0.61.0")
         }
     }
 }
