@@ -30,6 +30,3 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-
-// Kaml doesn't yet support wasm/JS target, so let's temporarily enable it in its local copy.
-includeBuild("kaml")
