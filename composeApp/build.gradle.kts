@@ -1,3 +1,4 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
@@ -25,8 +26,17 @@ kotlin {
         }
         binaries.executable()
     }
-    
+
+    jvm("desktop")
+
     sourceSets {
+        val desktopMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+            }
+        }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -34,7 +44,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation("io.ktor:ktor-client-core:3.0.0-wasm2")
+            implementation("io.ktor:ktor-client-core:3.0.0-beta-2")
+            implementation("io.ktor:ktor-client-cio:3.0.0-beta-2")
             implementation("com.charleskorn.kaml:kaml:0.61.0")
         }
     }
@@ -42,4 +53,15 @@ kotlin {
 
 compose.experimental {
     web.application {}
+}
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "it.krzeminski.githubactionstypingeditor"
+            packageVersion = "1.0.0"
+        }
+    }
 }
