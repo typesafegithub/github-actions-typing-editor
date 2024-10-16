@@ -32,7 +32,7 @@ kotlin {
     sourceSets {
         val wasmJsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:3.0.0-beta-2")
+                implementation("io.ktor:ktor-client-js:3.2.0")
             }
         }
 
@@ -40,7 +40,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)
-                implementation("io.ktor:ktor-client-cio:3.0.0-beta-2")
+                implementation("io.ktor:ktor-client-cio:3.0.0")
             }
         }
 
@@ -51,7 +51,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation("io.ktor:ktor-client-core:3.0.0-beta-2")
+            implementation("io.ktor:ktor-client-core:3.2.0")
             implementation("com.charleskorn.kaml:kaml:0.61.0")
         }
     }
