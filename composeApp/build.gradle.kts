@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.jetbrainsCompose)
-    kotlin("plugin.serialization") version "2.0.21"
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -32,7 +32,7 @@ kotlin {
     sourceSets {
         val wasmJsMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-js:3.2.0")
+                implementation(libs.ktor.client.js)
             }
         }
 
@@ -40,7 +40,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.kotlinx.coroutines.swing)
-                implementation("io.ktor:ktor-client-cio:3.0.0")
+                implementation(libs.ktor.client.cio)
             }
         }
 
@@ -51,8 +51,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation("io.ktor:ktor-client-core:3.2.0")
-            implementation("com.charleskorn.kaml:kaml:0.61.0")
+            implementation(libs.ktor.client.core)
+            implementation(libs.kaml)
         }
     }
 }
