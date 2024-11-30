@@ -1,3 +1,4 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
@@ -5,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.jetbrainsCompose)
-    kotlin("plugin.serialization") version "2.0.0"
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -25,8 +26,24 @@ kotlin {
         }
         binaries.executable()
     }
-    
+
+    jvm("desktop")
+
     sourceSets {
+        val wasmJsMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.js)
+            }
+        }
+
+        val desktopMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.ktor.client.cio)
+            }
+        }
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -34,8 +51,8 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation("io.ktor:ktor-client-core:3.0.0-wasm2")
-            implementation("com.charleskorn.kaml:kaml")
+            implementation(libs.ktor.client.core)
+            implementation(libs.kaml)
         }
 
         commonTest.dependencies {
@@ -49,4 +66,15 @@ kotlin {
 
 compose.experimental {
     web.application {}
+}
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "it.krzeminski.githubactionstypingeditor"
+            packageVersion = "1.0.0"
+        }
+    }
 }

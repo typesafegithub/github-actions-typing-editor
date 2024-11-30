@@ -1,10 +1,10 @@
 #!/usr/bin/env kotlin
 @file:Repository("https://repo1.maven.org/maven2/")
-@file:DependsOn("io.github.typesafegithub:github-workflows-kt:1.15.0")
+@file:DependsOn("io.github.typesafegithub:github-workflows-kt:3.0.1")
 
-@file:Repository("https://github-workflows-kt-bindings.colman.com.br/binding/")
+@file:Repository("https://bindings.krzeminski.it")
 @file:DependsOn("actions:checkout:v4")
-@file:DependsOn("gradle:actions__setup-gradle:v3")
+@file:DependsOn("gradle:actions__setup-gradle:v4")
 @file:DependsOn("actions:configure-pages:v5")
 @file:DependsOn("actions:upload-pages-artifact:v3")
 @file:DependsOn("actions:deploy-pages:v4")
@@ -20,12 +20,11 @@ import io.github.typesafegithub.workflows.domain.Permission
 import io.github.typesafegithub.workflows.domain.RunnerType
 import io.github.typesafegithub.workflows.domain.triggers.Push
 import io.github.typesafegithub.workflows.dsl.workflow
-import io.github.typesafegithub.workflows.yaml.writeToFile
 
 workflow(
     name = "Deploy",
     on = listOf(Push(branches = listOf("main"))),
-    sourceFile = __FILE__.toPath(),
+    sourceFile = __FILE__,
     permissions = mapOf(
         Permission.Contents to Mode.Read,
         Permission.Pages to Mode.Write,
@@ -49,4 +48,4 @@ workflow(
         ))
         uses(action = DeployPages())
     }
-}.writeToFile()
+}

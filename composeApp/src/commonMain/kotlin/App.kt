@@ -1,4 +1,5 @@
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,12 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.charleskorn.kaml.Yaml
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 
 val client = HttpClient()
 
@@ -25,12 +21,14 @@ val client = HttpClient()
 fun App() {
     MaterialTheme {
         var actionCoords by remember { mutableStateOf("actions/checkout@v4") }
-        var manifestYaml by remember { mutableStateOf("<manifest>") }
+        var manifest: Metadata? by remember { mutableStateOf(null) }
+        var typingFromAction: Typing? by remember { mutableStateOf(null) }
+        var typingFromCatalog: Typing? by remember { mutableStateOf(null) }
 
         LaunchedEffect(actionCoords) {
-            val actionManifestYaml = client.get(urlString = "https://raw.githubusercontent.com/${actionCoords.replace("@", "/")}/action.yml")
-                .body<String>()
-            manifestYaml = actionManifestYaml
+            manifest = fetchManifest(actionCoords)
+            typingFromAction = fetchTypingFromAction(actionCoords)
+            typingFromCatalog = fetchTypingFromCatalog(actionCoords)
         }
 
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -41,54 +39,59 @@ fun App() {
             )
             Spacer(Modifier.height(10.dp))
 
-            val myYaml = Yaml(configuration = Yaml.default.configuration.copy(strictMode = false))
-            val parsedYaml = try {
-                myYaml.decodeFromString<Metadata>(manifestYaml)
-            } catch (e: Exception) {
-                println("Exception: $e")
-                null
-            }
-
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                Text("Inputs", fontWeight = FontWeight.Bold)
-                if (parsedYaml?.inputs?.isEmpty() == true) {
-                    Text("<none>")
-                }
-                parsedYaml?.inputs?.forEach {
-                    Text(it.key)
-                }
-
-                Spacer(Modifier.height(10.dp))
-
-                Text("Outputs", fontWeight = FontWeight.Bold)
-                if (parsedYaml?.outputs?.isEmpty() == true) {
-                    Text("<none>")
-                }
-                parsedYaml?.outputs?.forEach {
-                    Text(it.key)
-                }
+            Row {
+                manifest(manifest)
+                typing(typingFromAction, source = "action")
+                typing(typingFromCatalog, source = "catalog")
             }
         }
     }
 }
 
-@Serializable
-data class Metadata(
-    val name: String,
-    val description: String,
-    val inputs: Map<String, Input> = emptyMap(),
-    val outputs: Map<String, Output> = emptyMap(),
-)
+@Composable
+private fun manifest(manifest: Metadata?) {
+    Column(Modifier.verticalScroll(rememberScrollState())) {
+        Text("Manifest:")
+        Text("Inputs", fontWeight = FontWeight.Bold)
+        if (manifest?.inputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        manifest?.inputs?.forEach {
+            Text(it.key)
+        }
 
-@Serializable
-data class Input(
-    val description: String = "",
-    val default: String? = null,
-    val required: Boolean? = null,
-    val deprecationMessage: String? = null,
-)
+        Spacer(Modifier.height(10.dp))
 
-@Serializable
-data class Output(
-    val description: String = "",
-)
+        Text("Outputs", fontWeight = FontWeight.Bold)
+        if (manifest?.outputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        manifest?.outputs?.forEach {
+            Text(it.key)
+        }
+    }
+}
+
+@Composable
+private fun typing(typing: Typing?, source: String) {
+    Column(Modifier.verticalScroll(rememberScrollState())) {
+        Text("Typing from $source:")
+        Text("Inputs", fontWeight = FontWeight.Bold)
+        if (typing?.inputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        typing?.inputs?.forEach {
+            Text("${it.key}: ${it.value.type}")
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+        Text("Outputs", fontWeight = FontWeight.Bold)
+        if (typing?.outputs?.isEmpty() == true) {
+            Text("<none>")
+        }
+        typing?.outputs?.forEach {
+            Text("${it.key}: ${it.value.type}")
+        }
+    }
+}
