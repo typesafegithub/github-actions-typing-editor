@@ -23,6 +23,12 @@ kotlin {
                     }
                 }
             }
+
+            testTask {
+                useKarma {
+                    useFirefox()
+                }
+            }
         }
         binaries.executable()
     }

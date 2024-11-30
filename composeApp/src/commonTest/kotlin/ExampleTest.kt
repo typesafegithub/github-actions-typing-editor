@@ -28,7 +28,7 @@ class ExampleTest {
         }
 
         // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API
-        onNodeWithTag("text").assertTextEquals("Hello")
+        onNodeWithTag("text").assertTextEquals("Helloooo")
         onNodeWithTag("button").performClick()
         onNodeWithTag("text").assertTextEquals("Compose")
     }
