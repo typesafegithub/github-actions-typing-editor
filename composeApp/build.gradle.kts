@@ -23,6 +23,12 @@ kotlin {
                     }
                 }
             }
+
+            testTask {
+                useKarma {
+                    useFirefox()
+                }
+            }
         }
         binaries.executable()
     }
@@ -53,6 +59,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.ktor.client.core)
             implementation(libs.kaml)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
         }
     }
 }
