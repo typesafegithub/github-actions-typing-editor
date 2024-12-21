@@ -3,7 +3,7 @@ compose = "1.7.6"
 compose-plugin = "1.7.1"
 junit = "4.13.2"
 kotlin = "2.1.0"
-kotlinx-coroutines = "1.10.0"
+kotlinx-coroutines = "1.10.1"
 ktor = "3.0.1"
 kaml = "0.67.0"
 
