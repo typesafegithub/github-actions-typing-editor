@@ -11,6 +11,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.ktor.client.HttpClient
@@ -57,7 +58,7 @@ private fun manifest(manifest: Metadata?) {
             Text("<none>")
         }
         manifest?.inputs?.forEach {
-            Text(it.key)
+            Text(it.key, modifier = Modifier.testTag("inputName"))
         }
 
         Spacer(Modifier.height(10.dp))
