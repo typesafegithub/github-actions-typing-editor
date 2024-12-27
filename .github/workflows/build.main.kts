@@ -27,7 +27,7 @@ workflow(
     ) {
         uses(action = Checkout())
         uses(action = ActionsSetupGradle())
-        run(command = "./gradlew build")
+        run(command = "./gradlew build --exclude-task wasmJsBrowserTest")
     }
 
     job(

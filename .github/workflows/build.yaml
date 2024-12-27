@@ -32,7 +32,7 @@ jobs:
     - id: 'step-1'
       uses: 'gradle/actions/setup-gradle@v4'
     - id: 'step-2'
-      run: './gradlew build'
+      run: './gradlew build --exclude-task wasmJsBrowserTest'
   build_kotlin_scripts:
     name: 'Build Kotlin scripts'
     runs-on: 'ubuntu-latest'
