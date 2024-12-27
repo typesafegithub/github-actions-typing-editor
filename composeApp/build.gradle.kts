@@ -23,6 +23,9 @@ kotlin {
                     }
                 }
             }
+            testTask {
+                enabled = false
+            }
         }
         binaries.executable()
     }

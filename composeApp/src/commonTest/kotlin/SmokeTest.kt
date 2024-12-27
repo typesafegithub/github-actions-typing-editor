@@ -12,6 +12,6 @@ class SmokeTest {
 
         waitUntilAtLeastOneExists(hasTestTag("inputName"))
 
-        onAllNodesWithTag("inputName").assertAny(hasText("repositoy"))
+        onAllNodesWithTag("inputName").assertAny(hasText("repository"))
     }
 }
