@@ -27,7 +27,10 @@ workflow(
     ) {
         uses(action = Checkout())
         uses(action = ActionsSetupGradle())
-        run(command = "./gradlew build")
+        // Skipping Wasm JS tests because of a memory consumption problem.
+        // TODO: re-enable once it works again https://kotlinlang.slack.com/archives/CDFP59223/p1735278520024339
+        //  See https://github.com/typesafegithub/github-actions-typing-editor/issues/43
+        run(command = "./gradlew build --exclude-task wasmJsBrowserTest")
     }
 
     job(
