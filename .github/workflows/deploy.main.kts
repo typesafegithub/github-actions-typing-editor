@@ -6,7 +6,7 @@
 @file:DependsOn("actions:checkout:v4")
 @file:DependsOn("gradle:actions__setup-gradle:v4")
 @file:DependsOn("actions:configure-pages:v5")
-@file:DependsOn("actions:upload-pages-artifact:v3")
+@file:DependsOn("actions:upload-pages-artifact:v4")
 @file:DependsOn("actions:deploy-pages:v4")
 
 import io.github.typesafegithub.workflows.actions.actions.Checkout
